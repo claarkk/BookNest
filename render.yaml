@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: booknest-library
+    name: claarkk-booknest
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
