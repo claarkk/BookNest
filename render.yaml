@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: booknest-library
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/auth/status
+    envVars:
+      - key: PUBLIC_DEPLOYMENT
+        value: "true"
+      - key: LIBRARY_DB_PATH
+        value: /tmp/library_management.db
+      - key: ADMIN_SETUP_TOKEN
+        generateValue: true

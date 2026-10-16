@@ -26,17 +26,22 @@ creates App_Data\library_management.db.
 GitHub stores and versions the source code. GitHub Pages only serves static
 files; it cannot run this ASP.NET Core server or its SQLite database.
 
-To publish the working system:
+For a free public demo, the included render.yaml describes a Render Free web
+service. Connect the GitHub repository to Render and create a Blueprint from
+render.yaml. The app will have a public HTTPS address after deployment.
+
+Important free-host limitations: the app may sleep after 15 minutes without
+visitors, and the first visit after sleeping can take about a minute to load.
+The service uses temporary local storage for SQLite. Accounts, books, loans,
+and cover images can be permanently lost whenever the service sleeps, restarts,
+or deploys. Do not use this free setup for real library records or important
+data. Render Free services do not include persistent disks.
+
+To share the source code on GitHub:
 1. Create a private GitHub repository and push this project to it. Do not add
    the local SQLite database, passwords, email credentials, or setup tokens.
    The included .gitignore excludes database files, build output, and
    environment files.
-2. GitHub Pages cannot create a public app link for this project. A separate
-   ASP.NET Core host is required. Free web-host plans may sleep when idle and
-   often erase local SQLite data on restart or redeploy. Do not use one for
-   important library records unless you have verified its current storage and
-   backup guarantees. No paid hosting is configured or required for the
-   GitHub repository.
 
 The app uses a hosted PORT and secure authentication cookies when
 PUBLIC_DEPLOYMENT=true is set outside Development. If deploying to a host,
