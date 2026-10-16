@@ -1,0 +1,239 @@
+@baseUrl = http://localhost:5080
+@bookId = 1
+@loanId = 1
+@requestId = 1
+@renewalRequestId = 1
+@applicationId = 1
+@categoryId = 1
+@subcategoryId = 1
+@memberId = 1
+@librarianUserId = 2
+
+### Sign in as System Admin before managing librarian accounts
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "{{adminPassword}}"
+}
+
+### Add a book with an optional cover (JPG, PNG, or WebP; maximum 2 MB)
+POST {{baseUrl}}/api/books
+Content-Type: multipart/form-data; boundary=BookNestBoundary
+
+--BookNestBoundary
+Content-Disposition: form-data; name="title"
+
+Book cover upload example
+--BookNestBoundary
+Content-Disposition: form-data; name="isbn"
+
+9780000000001
+--BookNestBoundary
+Content-Disposition: form-data; name="author"
+
+Example Author
+--BookNestBoundary
+Content-Disposition: form-data; name="publicationYear"
+
+2025
+--BookNestBoundary
+Content-Disposition: form-data; name="totalCopies"
+
+1
+--BookNestBoundary
+Content-Disposition: form-data; name="categoryId"
+
+{{categoryId}}
+--BookNestBoundary
+Content-Disposition: form-data; name="subcategoryId"
+
+{{subcategoryId}}
+--BookNestBoundary
+Content-Disposition: form-data; name="rentalFee"
+
+0
+--BookNestBoundary
+Content-Disposition: form-data; name="cover"; filename="book-cover.jpg"
+Content-Type: image/jpeg
+
+< ./book-cover.jpg
+--BookNestBoundary--
+
+### Retrieve a book's cover image
+GET {{baseUrl}}/api/books/{{bookId}}/cover
+
+### Replace a book's cover image
+PUT {{baseUrl}}/api/books/{{bookId}}/cover
+Content-Type: image/jpeg
+
+< ./book-cover.jpg
+
+### Remove a book's cover image
+DELETE {{baseUrl}}/api/books/{{bookId}}/cover
+
+### Apply for a Member account (approved by a Librarian or System Admin)
+POST {{baseUrl}}/api/auth/apply
+Content-Type: application/json
+
+{
+  "role": "Member",
+  "name": "Alex Morgan",
+  "email": "alex@example.com",
+  "phone": "",
+  "username": "alex.morgan",
+  "password": "{{memberPassword}}"
+}
+
+### Apply for a Librarian account (approved by a System Admin)
+POST {{baseUrl}}/api/auth/apply
+Content-Type: application/json
+
+{
+  "role": "Librarian",
+  "name": "Taylor Reed",
+  "email": "taylor@example.com",
+  "phone": "",
+  "institution": "Central City Library",
+  "position": "Library Assistant",
+  "workEmail": "taylor@centralcitylibrary.example",
+  "experience": "Three years of experience assisting with cataloging and circulation.",
+  "professionalReference": "Jordan Lee, jordan@example.com",
+  "username": "taylor.reed",
+  "password": "{{librarianPassword}}"
+}
+
+### List pending applications (Librarians see member applications; System Admins see all)
+GET {{baseUrl}}/api/applications
+
+### Review numbered copies and their current status (Librarian or System Admin)
+GET {{baseUrl}}/api/books/{{bookId}}/copies
+
+### Record a specific available inventory copy as lost or damaged (Librarian or System Admin)
+POST {{baseUrl}}/api/books/{{bookId}}/condition
+Content-Type: application/json
+
+{
+  "condition": "Damaged",
+  "action": "mark",
+  "copyNumber": 2
+}
+
+### Add physical copies to a book's stock (Librarian or System Admin)
+POST {{baseUrl}}/api/books/{{bookId}}/stock
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+### Set the simulated PHP rental fee for each 14-day loan (Librarian or System Admin)
+POST {{baseUrl}}/api/books/{{bookId}}/rental-fee
+Content-Type: application/json
+
+{
+  "rentalFee": 25.00
+}
+
+### Restore one previously recorded damaged or lost copy
+POST {{baseUrl}}/api/books/{{bookId}}/condition
+Content-Type: application/json
+
+{
+  "condition": "Damaged",
+  "action": "restore",
+  "copyNumber": 2
+}
+
+### Approve or reject an application (Librarians may act only on Member applications)
+POST {{baseUrl}}/api/applications/{{applicationId}}/approve
+
+###
+POST {{baseUrl}}/api/applications/{{applicationId}}/reject
+
+### Sign in as a Member linked to a library member record
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "{{memberUsername}}",
+  "password": "{{memberPassword}}"
+}
+
+### Request an available copy (Member only; a librarian must approve)
+POST {{baseUrl}}/api/loans/requests
+Content-Type: application/json
+
+{
+  "bookId": {{bookId}}
+}
+
+### View pending borrow requests (Librarian or System Admin)
+GET {{baseUrl}}/api/loans/requests
+
+### Approve a member borrow request (Librarian or System Admin)
+POST {{baseUrl}}/api/loans/requests/{{requestId}}/approve
+
+### Response includes emailSent and a pre-filled emailDraft fallback if SMTP is unavailable
+# Open emailDraft.to in the mail app, with the supplied subject and body, and press Send.
+
+### Reject a member borrow request (Librarian or System Admin)
+POST {{baseUrl}}/api/loans/requests/{{requestId}}/reject
+
+### Return one of the signed-in Member's active loans
+POST {{baseUrl}}/api/loans/{{loanId}}/return
+Content-Type: application/json
+
+{}
+
+### Request a renewal for an eligible active loan (Member only)
+POST {{baseUrl}}/api/loans/{{loanId}}/renewals
+Content-Type: application/json
+
+{}
+
+### List pending loan-renewal requests (Librarian or System Admin)
+GET {{baseUrl}}/api/loans/renewals
+
+### Approve or reject a pending renewal (Librarian or System Admin)
+POST {{baseUrl}}/api/loans/renewals/{{renewalRequestId}}/approve
+
+###
+POST {{baseUrl}}/api/loans/renewals/{{renewalRequestId}}/reject
+
+### View loan and return history (Members see only their own records)
+GET {{baseUrl}}/api/loans/history
+
+### Filter staff loan history by the day borrowed (Librarian or System Admin)
+GET {{baseUrl}}/api/loans/history?date=2025-01-15
+
+### Confirm a pending return and mark its assigned physical copy damaged (Librarian or System Admin)
+POST {{baseUrl}}/api/loans/returns/{{loanId}}/confirm-damaged
+
+### Confirm a pending return with no damage recorded (Librarian or System Admin)
+POST {{baseUrl}}/api/loans/returns/{{loanId}}/confirm
+
+### Monitor all active loans, due dates, and estimated overdue fines (Librarian or System Admin)
+GET {{baseUrl}}/api/loans/active
+
+### Filter the book catalog by category
+GET {{baseUrl}}/api/books?categoryId={{categoryId}}
+
+### Filter the book catalog by genre/subcategory
+GET {{baseUrl}}/api/books?subcategoryId={{subcategoryId}}
+
+### Archive a member after resolving active loans and pending borrow requests (Librarian or System Admin)
+DELETE {{baseUrl}}/api/members/{{memberId}}
+
+### Archive a librarian account (System Admin)
+DELETE {{baseUrl}}/api/users/{{librarianUserId}}
+
+### View archived accounts and archive/restore audit activity (System Admin)
+GET {{baseUrl}}/api/archive
+
+### Restore an archived member (System Admin)
+POST {{baseUrl}}/api/archive/Member/{{memberId}}/restore
+
+### Restore an archived librarian (System Admin)
+POST {{baseUrl}}/api/archive/Librarian/{{librarianUserId}}/restore

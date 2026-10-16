@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BookNest - Library Management</title>
+  <link rel="stylesheet" href="/styles.css?v=203">
+</head>
+<body>
+  <div class="auth-library-scene" aria-hidden="true">
+    <div class="auth-floating-book auth-floating-book-one">
+      <svg viewBox="0 0 64 48"><path d="M32 13c-7-5-15-6-24-4v27c9-2 17-1 24 4m0-27c7-5 15-6 24-4v27c-9-2-17-1-24 4m0-27v31M13 17c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5M13 24c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5"/></svg>
+    </div>
+    <div class="auth-floating-book auth-floating-book-two">
+      <svg viewBox="0 0 64 48"><path d="M32 13c-7-5-15-6-24-4v27c9-2 17-1 24 4m0-27c7-5 15-6 24-4v27c-9-2-17-1-24 4m0-27v31M13 17c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5M13 24c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5"/></svg>
+    </div>
+    <div class="auth-floating-book auth-floating-book-three">
+      <svg viewBox="0 0 64 48"><path d="M32 13c-7-5-15-6-24-4v27c9-2 17-1 24 4m0-27c7-5 15-6 24-4v27c-9-2-17-1-24 4m0-27v31M13 17c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5M13 24c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5"/></svg>
+    </div>
+    <div class="auth-floating-book auth-floating-book-four">
+      <svg viewBox="0 0 64 48"><path d="M32 13c-7-5-15-6-24-4v27c9-2 17-1 24 4m0-27c7-5 15-6 24-4v27c-9-2-17-1-24 4m0-27v31M13 17c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5M13 24c5-.7 10-.2 14 1.5m24-1.5c-5-.7-10-.2-14 1.5"/></svg>
+    </div>
+    <svg class="auth-scatter-book auth-scatter-closed auth-scatter-two" viewBox="0 0 120 150">
+      <path class="book-cover" d="M24 15c23 4 48 2 72-6v119c-23 8-48 10-72 6-6-1-10-6-10-12V27c0-8 4-13 10-12Z"/>
+      <path class="book-detail" d="M27 28c19 3 42 1 62-5M29 117c18 3 39 1 60-5M31 34v76m-8-93v119"/>
+    </svg>
+    <svg class="auth-scatter-book auth-scatter-closed auth-scatter-four" viewBox="0 0 170 100">
+      <path class="book-cover" d="m25 22 115-10 15 63-117 13Z"/>
+      <path class="book-pages" d="m32 26 105-9 11 52-107 12Z"/>
+      <path class="book-detail" d="m25 22 13 7 13 59M39 32l99-9m-91 39 97-9m-96 16 99-9"/>
+    </svg>
+    <svg class="auth-scatter-book auth-scatter-open auth-scatter-six" viewBox="0 0 180 130">
+      <path class="book-pages" d="M90 39c-19-17-47-21-76-15v66c29-6 57-2 76 15 19-17 47-21 76-15V24c-29-6-57-2-76 15Z"/>
+      <path class="book-detail" d="M90 39v66M22 40c22-3 42 1 56 10M22 54c22-3 42 1 56 10M22 68c22-3 42 1 56 10m24-28c14-9 34-13 56-10m-56 24c14-9 34-13 56-10m-56 24c14-9 34-13 56-10"/>
+      <path class="book-edge" d="M14 92c29-6 57-2 76 15 19-17 47-21 76-15"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-left-top" viewBox="0 0 100 80">
+      <path d="M50 24c-12-10-27-12-42-8v42c15-4 30-2 42 8 12-10 27-12 42-8V16c-15-4-30-2-42 8Z"/>
+      <path d="M50 24v42M17 28c11-2 21 0 28 5m-28 7c11-2 21 0 28 5m10-17c7-5 17-7 28-5m-28 17c7-5 17-7 28-5"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-left-bottom" viewBox="0 0 100 100">
+      <path d="m30 11 8 16 18 3-13 13 3 18-16-9-16 9 3-18L2 30l18-3 10-16Z"/>
+      <path d="m75 55 5 10 11 2-8 8 2 11-10-6-10 6 2-11-8-8 11-2 5-10Z"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-right-top" viewBox="0 0 100 90">
+      <path d="M20 20h24v56H20zM26 27h12M26 34h12M26 41h9M53 15h26v61H53zM59 23h14M59 31h14M59 39h11"/>
+      <path d="M16 76h66"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-right-bottom" viewBox="0 0 100 80">
+      <path d="M50 24c-12-10-27-12-42-8v42c15-4 30-2 42 8 12-10 27-12 42-8V16c-15-4-30-2-42 8Z"/>
+      <path d="M50 24v42M17 28c11-2 21 0 28 5m-28 7c11-2 21 0 28 5m10-17c7-5 17-7 28-5m-28 17c7-5 17-7 28-5"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-bookmark" viewBox="0 0 70 110">
+      <path d="M17 12h36v78L35 77 17 90V12Z"/>
+      <path d="M25 25h20M25 33h16"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-book-stack" viewBox="0 0 130 90">
+      <path d="m18 59 92-12 9 18-94 13-7-19Z"/>
+      <path d="m12 48 93-12 9 18-94 13-8-19Z"/>
+      <path d="m24 39 5-27 22 3 7 27-34-3Zm38-3 2-27 22-2 9 26-33 3Z"/>
+      <path d="m35 19 12 1m25-4 12-1M27 46l83-11"/>
+    </svg>
+    <svg class="auth-background-doodle auth-doodle-page" viewBox="0 0 100 90">
+      <path d="M22 15h49l13 13v48H22V15Z"/>
+      <path d="M71 15v14h13M32 39h41M32 48h41M32 57h34M32 66h27"/>
+    </svg>
+  </div>
+  <div id="auth"></div>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#dashboard"><span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 18.5V7.2c0-.8.6-1.4 1.4-1.4h2.8v14H4.9c-.8 0-1.4-.6-1.4-1.3Zm5.5 0V5.4c0-.8.6-1.4 1.4-1.4h2.8v16h-2.8c-.8 0-1.4-.6-1.4-1.5Zm5.5 0V7.2c0-.8.6-1.4 1.4-1.4h2.8v14h-2.8c-.8 0-1.4-.6-1.4-1.3Z"/><path d="M5.2 9h1.3m4.2-1.8H12m4.2 1.8h1.3"/></svg></span><span>Book Nest<small>Library Management</small></span></a>
+    <div class="sidebar-divider" aria-hidden="true"></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+      <button data-page="dashboard" data-roles="Member,Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7"/><path d="M5 9v11h14V9M9 20v-6h6v6"/></svg></i>Dashboard</button>
+      <button data-page="books" data-roles="Member,Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22.5z"/><path d="M4 5.5v14A2.5 2.5 0 0 1 6.5 17H20M8 7h8"/></svg></i>Books</button>
+      <button data-page="pinned" data-roles="Member"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg></i>Pinned Books</button>
+      <button data-page="applications" data-roles="Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-2"/><rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="m8 13 2.5 2.5L16 10"/></svg></i><span>Applications</span><span class="nav-badge" data-notification-badge="applications" aria-label="Pending applications" hidden></span></button>
+    </nav>
+    <div class="nav-label" data-roles="Librarian,SystemAdmin">PEOPLE</div>
+    <nav class="nav" data-roles="Librarian,SystemAdmin">
+      <button data-page="members" data-roles="Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1.5a6.5 6.5 0 0 1 13 0V20M16 4.8a3.5 3.5 0 0 1 0 6.4m2 3a5.5 5.5 0 0 1 3.5 5.1V20"/></svg></i><span data-member-list-label>Members</span></button>
+      <button data-page="librarians" data-roles="SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-1.5a7 7 0 0 1 14 0V21z"/><path d="M18 3h3v3"/></svg></i>Librarians</button>
+    </nav>
+    <div class="nav-label" data-roles="Member,Librarian,SystemAdmin">CIRCULATION</div>
+    <nav class="nav" data-roles="Member,Librarian,SystemAdmin">
+      <button data-page="issue" data-roles="Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v4"/><path d="M15 3v5h5M5 3v18h6"/><circle cx="17" cy="17" r="4"/><path d="M17 15v2l1.5 1"/></svg></i><span>Borrow requests</span><span class="nav-badge" data-notification-badge="borrow" aria-label="Pending borrow and renewal requests" hidden></span></button>
+      <button data-page="return" data-roles="Member,Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22.5z"/><path d="M4 5.5v14A2.5 2.5 0 0 1 6.5 17H11m3.5-1 2 2 4-4"/></svg></i><span data-member-return-label>Return a book</span><span class="nav-badge" data-notification-badge="returns" data-roles="Librarian,SystemAdmin" aria-label="Pending return confirmations" hidden></span></button>
+    </nav>
+    <div class="nav-label">RECORDS</div>
+    <nav class="nav">
+      <button data-page="history" data-roles="Member,Librarian,SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12a2 2 0 0 1 2 2v16H4V5a2 2 0 0 1 2-2Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></i><span data-member-history-label>Loan history</span></button>
+    </nav>
+    <div class="nav-label" data-roles="SystemAdmin">ADMINISTRATION</div>
+    <nav class="nav" data-roles="SystemAdmin">
+      <button data-page="archive" data-roles="SystemAdmin"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4zM3 4h18v3H3z"/><path d="M9 11h6"/></svg></i>Archived accounts</button>
+    </nav>
+    <div class="nav-label" data-roles="Member,Librarian" hidden>ACCOUNT</div>
+    <nav class="nav">
+      <button data-page="accountSettings" data-roles="Member,Librarian"><i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.5 2.6-1.7-.7a8 8 0 0 1-1.6.9l-.3 1.8h-3l-.3-1.8a8 8 0 0 1-1.6-.9l-1.7.7-1.5-2.6 1.4-1.1a7 7 0 0 1 0-1.9l-1.4-1.2 1.5-2.6 1.7.7a8 8 0 0 1 1.6-.9l.3-1.8h3l.3 1.8a8 8 0 0 1 1.6.9l1.7-.7 1.5 2.6-1.4 1.2a7 7 0 0 1-.1 1.8Z"/></svg></i>Account Settings</button>
+      <button data-logout data-roles="Member"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"/><path d="M14 16l5-4-5-4m5 4H9"/></svg></i>Log-out</button>
+    </nav>
+  </aside>
+  <main>
+    <header class="topbar"><div class="topbar-leading"><button class="sidebar-toggle" type="button" aria-label="Hide navigation" aria-controls="sidebar" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M9 5v14M12.5 9l2.5 3-2.5 3"/></svg></button><span>Book Nest <span class="topbar-separator">/</span> <span id="crumb">Dashboard</span></span></div><div class="topbar-right"><time class="topbar-clock" id="local-clock"></time><span class="user-tools" id="user-tools"></span></div></header>
+    <div class="page" id="page"></div>
+  </main>
+  <script src="/app.js?v=153" defer></script>
+</body>
+</html>
