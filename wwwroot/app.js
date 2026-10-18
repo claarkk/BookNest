@@ -217,7 +217,6 @@
           window.clearTimeout(timeoutId);
           if(overlay.open)overlay.close();
           overlay.remove();
-          document.body.classList.remove("login-opening-active");
           resolve();
         };
         overlay.addEventListener("animationend",event=>{
@@ -240,9 +239,16 @@
       authRoot.querySelector("#login-form").onsubmit=async event=>{
         event.preventDefault();
         const button=event.currentTarget.querySelector("button");button.disabled=true;
-        try{await api("/api/auth/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(event.currentTarget)))});await playLoginOpeningAnimation();await enterApp()}
+        try{
+          await api("/api/auth/login",{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(event.currentTarget)))});
+          await playLoginOpeningAnimation();
+          await enterApp();
+        }
         catch(error){const box=authRoot.querySelector("#auth-error");box.textContent=error.message;box.classList.add("visible")}
-        finally{button.disabled=false}
+        finally{
+          document.body.classList.remove("login-opening-active");
+          button.disabled=false;
+        }
       };
       authRoot.querySelectorAll("[data-apply-role]").forEach(button=>button.onclick=()=>showApplicationForm(button.dataset.applyRole));
     }
@@ -286,6 +292,8 @@
       document.querySelector("[data-member-return-label]").textContent=member?"My loans":"Return a book";
       document.querySelector("[data-member-list-label]").textContent="Members";
       const roleClass=currentUser.role==="SystemAdmin"?"system-admin":currentUser.role.toLowerCase();
+      document.body.classList.toggle("member-mode",member);
+      document.body.classList.toggle("system-admin-mode",currentUser.role==="SystemAdmin");
       const initials=(currentUser.displayName||currentUser.username||"U").trim().split(/\s+/).slice(0,2).map(part=>part[0]).join("").toUpperCase();
       document.getElementById("user-tools").innerHTML=`<button class="button profile-account-button" data-page="profile" aria-label="Open profile"><span class="user-avatar"><span class="user-avatar-fallback">${esc(initials)}</span><img alt="" hidden></span><span>Profile</span></button><span class="role-label role-identity role-identity-${roleClass}">${esc(roleLabel)}</span>${member?"":'<button class="button logout-button" data-logout><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"/><path d="m14 16 5-4-5-4m5 4H9"/></svg>Log out</button>'}`;
       const avatar=document.querySelector(".profile-account-button .user-avatar");
@@ -704,9 +712,9 @@
         const onlineLibrarians=staff.filter(user=>presenceStatus(user.status)==="online").length;
         root.innerHTML=`<section class="heading admin-dashboard-heading"><div><div class="eyebrow">SYSTEM ADMIN</div><h1>Dashboard</h1><p>Overview of your library, members, and librarian accounts.</p></div></section>
         <section class="stats admin-stats">
-          <article class="stat"><div class="stat-top"><span class="stat-icon green">♙</span><span class="stat-caption">MEMBERS</span></div><div class="stat-value">${members.length}</div><div class="stat-label">${onlineMembers} online now · ${members.length-onlineMembers} offline or inactive</div></article>
-          <article class="stat"><div class="stat-top"><span class="stat-icon">♙</span><span class="stat-caption">LIBRARIANS</span></div><div class="stat-value">${staff.length}</div><div class="stat-label">${onlineLibrarians} online now · ${staff.length-onlineLibrarians} offline or inactive</div></article>
-          <article class="stat"><div class="stat-top"><span class="stat-icon amber">◷</span><span class="stat-caption">INACTIVE MEMBERS</span></div><div class="stat-value">${members.filter(member=>member.status==="Inactive").length}</div><div class="stat-label">No activity for over one year</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon green"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20zM16 5.5a3 3 0 0 1 0 5.8m1.5 2.4a5 5 0 0 1 3 4.5V20"/></svg></span><span class="stat-caption">MEMBERS</span></div><div class="stat-value">${members.length}</div><div class="stat-label">${onlineMembers} online now · ${members.length-onlineMembers} offline or inactive</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="7" r="3"/><path d="M4 20v-1.5a6 6 0 0 1 12 0V20z"/><path d="M17 5h4v5h-4zM18 7.5h2"/></svg></span><span class="stat-caption">LIBRARIANS</span></div><div class="stat-value">${staff.length}</div><div class="stat-label">${onlineLibrarians} online now · ${staff.length-onlineLibrarians} offline or inactive</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon amber"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20z"/><circle cx="18" cy="17" r="3.5"/><path d="M16.5 17h3"/></svg></span><span class="stat-caption">INACTIVE MEMBERS</span></div><div class="stat-value">${members.filter(member=>member.status==="Inactive").length}</div><div class="stat-label">No activity for over one year</div></article>
         </section>
         ${dashboardQuickActions([{page:"members",label:"Manage members",icon:"members"},{page:"librarians",label:"Manage librarians",icon:"staff"},{page:"archive",label:"Archived accounts",icon:"archive"},{page:"history",label:"Loan history",icon:"history"}])}
         <div class="dashboard admin-dashboard">
@@ -1532,7 +1540,7 @@
       const logout=event.target.closest("[data-logout]");
       if(logout){
         clearAccountAvatar();
-        try{await api("/api/auth/logout",{method:"POST"})}finally{resetStaffNotificationState();document.body.classList.add("auth-mode");currentUser=null;showLogin()}
+        try{await api("/api/auth/logout",{method:"POST"})}finally{resetStaffNotificationState();document.body.classList.remove("member-mode","system-admin-mode");document.body.classList.add("auth-mode");currentUser=null;showLogin()}
         return;
       }
       const button=event.target.closest("[data-page]");if(!button)return;

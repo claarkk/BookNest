@@ -2626,18 +2626,28 @@ input[type="password"]::-ms-clear { display: none }
 .admin-stats .stat-top {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 32px;
-  margin-bottom: 2px;
+  min-height: 0;
+  gap: 5px;
+  margin-bottom: 4px;
 }
 .admin-stats .stat-icon {
-  position: absolute;
-  left: 0;
-  width: 30px;
-  height: 30px;
-  font-size: 15px;
+  position: static;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+}
+.admin-stats .stat-icon svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 .admin-stats .stat-caption {
   color: #718198;
@@ -5004,4 +5014,48 @@ body.login-opening-active #auth { visibility: hidden }
   background-image:
     linear-gradient(90deg, transparent 0 38px, #dfb2ac 38px 39px, transparent 39px),
     repeating-linear-gradient(to bottom, transparent 0 23px, #d3deeb 24px, transparent 25px);
+}
+
+body.system-admin-mode #page > .heading:not(.admin-dashboard-heading) > div:first-child {
+  position: relative;
+  padding-left: 29px;
+  border-color: #c9d6e8;
+  background: linear-gradient(110deg, #edf4ff 0%, #f7f9fe 72%, #fcfbf7 100%);
+  box-shadow: inset 0 1px 0 #fff, 0 2px 6px #152b4c0a;
+}
+
+body.system-admin-mode #page > .heading:not(.admin-dashboard-heading) > div:first-child::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  border-radius: 7px 0 0 7px;
+  background: linear-gradient(to bottom, #c5a36a, #758eaf 30%, #758eaf 70%, #c5a36a);
+  content: "";
+}
+
+body.system-admin-mode #page > .heading:not(.admin-dashboard-heading) > div:first-child::after {
+  position: absolute;
+  top: 9px;
+  left: 10px;
+  width: 8px;
+  height: 16px;
+  background: #d7bd86;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+  content: "";
+}
+
+body.member-mode #sidebar .nav i {
+  flex: 0 0 28px;
+  justify-content: center;
+}
+
+body.member-mode #sidebar .nav button:hover > i {
+  transform: translateX(-2px);
+}
+
+@media(max-width:760px) {
+  body.member-mode #sidebar .nav i {
+    flex-basis: 22px;
+    width: 22px;
+  }
 }
