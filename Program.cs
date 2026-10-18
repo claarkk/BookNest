@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using System.Net.Http.Json;
 using System.Globalization;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -18,6 +19,7 @@ var defaultUrls = isHosted
     : "http://localhost:5080";
 builder.WebHost.UseUrls(configuredUrls ?? defaultUrls);
 builder.Services.AddSingleton<LibraryStore>();
+builder.Services.AddHttpClient();
 builder.Services.AddSingleton<ReceiptEmailSender>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -2939,10 +2941,17 @@ internal sealed class LibraryStore
     }
 }
 
-internal sealed class ReceiptEmailSender(IConfiguration configuration, ILogger<ReceiptEmailSender> logger)
+internal sealed class ReceiptEmailSender(
+    IConfiguration configuration,
+    ILogger<ReceiptEmailSender> logger,
+    IHttpClientFactory httpClientFactory)
 {
     public async Task<string?> SendAsync(BorrowReceipt receipt)
     {
+        var brevoApiKey = configuration["Email:Brevo:ApiKey"];
+        if (!string.IsNullOrWhiteSpace(brevoApiKey))
+            return await SendWithBrevoAsync(receipt, brevoApiKey);
+
         var host = configuration["Email:Smtp:Host"] ?? "smtp.gmail.com";
         var username = configuration["Email:Smtp:Username"];
         var from = configuration["Email:Smtp:From"] ?? username;
@@ -2985,21 +2994,7 @@ internal sealed class ReceiptEmailSender(IConfiguration configuration, ILogger<R
             using var message = new MailMessage(new MailAddress(from), new MailAddress(receipt.MemberEmail))
             {
                 Subject = "Your BookNest loan is confirmed",
-                Body = $"""
-                    Good day, {receipt.MemberName},
-
-                    Your loan request has been approved, and your book loan is now confirmed.
-
-                    Book: {receipt.BookTitle}
-                    Borrowed: {receipt.LoanDate}
-                    Due date: {receipt.DueDate}
-                    Rental fee (14-day loan): PHP {receipt.RentalFee:0.00}
-
-                    Please return the book by the due date. Late returns incur a fine of PHP 5.00 per day.
-
-                    Thank you,
-                    BookNest Library
-                    """,
+                Body = CreateReceiptBody(receipt),
                 IsBodyHtml = false
             };
             using var client = new SmtpClient(host, port)
@@ -3034,6 +3029,65 @@ internal sealed class ReceiptEmailSender(IConfiguration configuration, ILogger<R
             return "The SMTP configuration could not send the receipt. Check the server configuration and application log.";
         }
     }
+
+    private async Task<string?> SendWithBrevoAsync(BorrowReceipt receipt, string apiKey)
+    {
+        var from = configuration["Email:Brevo:From"];
+        if (string.IsNullOrWhiteSpace(from))
+        {
+            logger.LogWarning("Borrow receipt email was not sent because the Brevo sender address is not configured.");
+            return "Set Email__Brevo__From to a verified sender address in the email provider.";
+        }
+
+        var senderName = configuration["Email:Brevo:SenderName"] ?? "BookNest Library";
+        using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.brevo.com/v3/smtp/email");
+        request.Headers.Add("api-key", apiKey);
+        request.Content = JsonContent.Create(new
+        {
+            sender = new { name = senderName, email = from },
+            to = new[] { new { email = receipt.MemberEmail, name = receipt.MemberName } },
+            subject = "Your BookNest loan is confirmed",
+            textContent = CreateReceiptBody(receipt)
+        });
+
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+            using var response = await httpClientFactory.CreateClient().SendAsync(request, timeout.Token);
+            if (response.IsSuccessStatusCode)
+                return null;
+
+            logger.LogError("Brevo rejected a borrowing receipt with HTTP status {StatusCode}.", (int)response.StatusCode);
+            return "The email provider rejected the message. Check that the sender is verified and the API key is valid.";
+        }
+        catch (HttpRequestException exception)
+        {
+            logger.LogError(exception, "Failed to send a borrowing receipt through the email provider.");
+            return "Could not connect to the email provider. Check the server logs and provider status.";
+        }
+        catch (OperationCanceledException exception)
+        {
+            logger.LogError(exception, "Sending a borrowing receipt through the email provider timed out.");
+            return "The email provider did not respond in time. Check the server logs and try again.";
+        }
+    }
+
+    private static string CreateReceiptBody(BorrowReceipt receipt) =>
+        $"""
+        Good day, {receipt.MemberName},
+
+        Your loan request has been approved, and your book loan is now confirmed.
+
+        Book: {receipt.BookTitle}
+        Borrowed: {receipt.LoanDate}
+        Due date: {receipt.DueDate}
+        Rental fee (14-day loan): PHP {receipt.RentalFee:0.00}
+
+        Please return the book by the due date. Late returns incur a fine of PHP 5.00 per day.
+
+        Thank you,
+        BookNest Library
+        """;
 
     private static bool IsAuthenticatedMailHost(string host) =>
         host.Equals("smtp.gmail.com", StringComparison.OrdinalIgnoreCase)

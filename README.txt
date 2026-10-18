@@ -137,15 +137,28 @@ title.
 
 After a borrow request is approved, the system sends a receipt to the email
 address saved on that member's record (the address entered during registration).
-If SMTP is configured, the server sends it automatically. Otherwise, BookNest
-opens a pre-filled email draft in the librarian's default mail app (such as
-Outlook), addressed to the member's email (including Gmail), with the book,
-borrow date, and due date; the librarian must press Send. The server cannot
-silently send from a mail app without the sender's credentials and consent.
+On Render Free, configure the Brevo HTTPS API because Render blocks outbound
+SMTP ports 25, 465, and 587. Create a Brevo account, verify the sender address,
+then add these environment variables in the Render service's private
+Environment settings:
 
-For an Outlook / Microsoft 365 sender, use authenticated SMTP on port 587 with
-STARTTLS. Set these environment variables in the same PowerShell window used
-to start the app (replace the examples; never commit credentials):
+    Email__Brevo__ApiKey = your-Brevo-API-key
+    Email__Brevo__From = your-verified-sender@example.com
+    Email__Brevo__SenderName = BookNest Library
+
+Never commit or share the API key. The Brevo API key takes precedence over SMTP
+when configured. After the sender and API key are set, the app sends the email
+automatically when a librarian or System Admin approves a loan. If delivery
+fails, BookNest shows a prepared email draft as a fallback.
+
+Brevo's free plan has a daily sending limit; check the provider's current plan
+and usage limits before relying on it. Sending still requires a verified sender
+and an active provider account.
+
+For local hosting or another host that permits SMTP, an Outlook / Microsoft
+365 sender can use authenticated SMTP on port 587 with STARTTLS. Set these
+environment variables in the same PowerShell window used to start the app
+(replace the examples; never commit credentials):
 
     $env:Email__Smtp__Host = "smtp.office365.com"
     $env:Email__Smtp__Port = "587"
@@ -163,13 +176,12 @@ and allowed by the organization; use an approved SMTP credential. If the
 account does not allow SMTP username/password sign-in, use Gmail SMTP instead
 or configure an OAuth-based mail integration.
 
-Gmail SMTP is also supported. Enable 2-Step Verification on the sending Gmail
-account, create a Google App Password, then use smtp.gmail.com on port 587,
-your Gmail address for From and Username, and the App Password for Password.
-Do not use your normal Gmail password. Keep any mail credential private and
-out of source control. If SMTP is not configured or delivery fails, the
-prepared email draft is the fallback. Restart the server after changing
-environment variables.
+Gmail SMTP is also supported on hosts that allow it. Enable 2-Step Verification
+on the sending Gmail account, create a Google App Password, then use
+smtp.gmail.com on port 587, your Gmail address for From and Username, and the
+App Password for Password. Do not use your normal Gmail password. Keep all mail
+credentials private and out of source control. Restart the server after
+changing environment variables.
 
 Members appear as Online while recently active, Offline after the session stops
 reporting activity, and Inactive after one year without activity. Librarians
